@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coindom - Crypto Search</title>
+    <link rel="ICON" type="image/png" href="./bitcoin.e146d46fb598ae0d8f43.png">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+    <script defer="defer" src="https://kit.fontawesome.com/a388be2306.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+    }
+
+    .container {
+        /* background: url(./background.png); */
+        background-position: unset;
+        background-repeat: no-repeat;
+        background-size: cover;
+        /* background-size: unset; */
+        width: 100%;
+        /* height: 100vh; */
+        background: linear-gradient(0deg, #0f051d 30%, #130749 70%);
+    }
+
+    .container>nav {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 20px 0;
+        background: #130749;
+        width: 100%;
+        z-index: 99;
+    }
+
+    .wallet {
+        padding: 4px 18px 6px 18px;
+        color: white;
+        background: transparent;
+        cursor: pointer;
+        border: 1px solid #fff;
+        border-radius: 20px;
+        font-family: system-ui;
+        font-size: 19px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .wallet:hover {
+        color: #f0a147;
+        transition: all 0.5s;
+        border-color: #f0a147;
+    }
+
+    nav>ul>a {
+        color: #f0a147;
+        /* color: #fff; */
+        text-decoration: none;
+        margin-left: 10px;
+        text-transform: uppercase;
+        font-weight: 900;
+        font-size: 30px;
+        font-family: math;
+    }
+
+    nav>ul {
+        display: flex;
+        align-items: center;
+    }
+
+    nav>ul>li {
+        color: #eeebe5;
+        list-style: none;
+        margin-right: 30px;
+        /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+        font-family: system-ui;
+        font-size: 19px;
+        font-weight: 600;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s;
+        /* padding-bottom: 7px; */
+    }
+
+    li::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background: #f0a147;
+        transition: all 0.5s;
+    }
+
+    li:hover::after {
+        width: 100%;
+        transition: all 0.5s;
+    }
+
+    li:hover {
+        color: #f7ae5b;
+        transition: all 0.5s;
+    }
+
+    .text {
+        color: #fff;
+        padding: 170px 0 0 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .text>h1 {
+        font-size: 5.2rem;
+        letter-spacing: 1.2px;
+        text-align: center;
+    }
+
+    .text>h1>span {
+        /* color: #f0a147; */
+        -webkit-background-clip: text;
+        background-image: linear-gradient(25deg, #2600fc, #ff00ea);
+        /* background-image: linear-gradient(25deg, #2600fc, #9139f7); */
+        color: transparent;
+
+    }
+
+    .crypto-rate {
+        margin-top: 5%;
+        padding: 0 70px;
+        display: flex;
+        text-align: center;
+        justify-content: space-evenly;
+    }
+
+    .rate-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        border-radius: 10px;
+    }
+
+    .rate-box>img {
+        width: 90px;
+    }
+
+    .rate-box>p {
+        font-size: 28px;
+        font-weight: 600;
+        text-transform: capitalize;
+        color: white;
+        font-family: system-ui;
+    }
+
+    /* .rate-box>p>span {
+        color: red;
+    } */
+    #percentplus {
+        color: green;
+    }
+
+    #percent {
+        color: red;
+    }
+
+    .market {
+        font-family: system-ui;
+        padding: 4% 8%;
+        background: #0f051d;
+    }
+
+    .market>h1 {
+        font-size: 60px;
+        color: #fff;
+        font-weight: 500;
+        margin: 10% 0 4% 0;
+    }
+
+    .market .market-list .trade-detail {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        /* background: linear-gradient(25deg, #2600fc, #9139f7); */
+        background: linear-gradient(25deg, #2600fc, #ff00ea);
+        padding: 20px 15px;
+        width: 1075px;
+    }
+
+    ::-webkit-scrollbar {
+        height: 17px;
+        background-color: black;
+        border: 3px solid black;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgb(51, 50, 50);
+        border: 3px solid black;
+    }
+
+    .trade-detail::-webkit-scrollbar-thumb {
+        /* border: 2px solid #ffffff; */
+        border: 2px 10px;
+    }
+
+
+    .market .market-list .trade-detail>p {
+        color: #fff;
+        font-family: system-ui;
+        font-size: 22px;
+        font-weight: 600;
+        text-transform: capitalize;
+        /* border-top-left-radius: 20px;
+        border-top-right-radius: 20px; */
+    }
+
+    .market .market-list .trade-detail>p>img {
+        width: 50px;
+    }
+
+    .details {
+        background: #0f051d !important;
+        border-bottom: 1px solid white;
+        transition: all 0.3s;
+    }
+
+    .details:hover {
+        background: linear-gradient(25deg, #2600fc25, #9239f72a) !important;
+        transition: all 0.5s;
+    }
+
+    .details:hover>button {
+        -webkit-background-clip: text;
+        color: transparent;
+        /* background-image: linear-gradient(25deg, #3c1bf8, #9f52f7); */
+        background-image: linear-gradient(50deg, #2600fc, #ff00ea);
+        /* -webkit-border-image: border; */
+        border-color: #2600fc #ff00ea;
+    }
+
+    .why {
+        font-size: 70px !important;
+        color: white;
+        text-align: center;
+    }
+
+    .why>span {
+        color: transparent;
+        -webkit-background-clip: text;
+        background-image: linear-gradient(50deg, #2600fc, #ff00ea);
+    }
+
+    .why-choose {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding-top: 50px;
+        gap: 50px;
+    }
+
+    .why-choose-left {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .left-details-one {
+        background: linear-gradient(25deg, #3e095e, #1d0977);
+        border-radius: 12px;
+        display: flex;
+        gap: 30px;
+        padding: 25px;
+        border: 1px solid #524f4f;
+    }
+
+    .left-details-one>img {
+        height: 40px;
+        padding: 10px;
+        border-radius: 20px;
+        background: linear-gradient(50deg, #2600fc, #ff00ea);
+    }
+
+    .one-detail>b {
+        font-size: 25px;
+        color: #fff;
+
+    }
+
+    .one-detail>p {
+        font-size: 19px;
+        color: #fff;
+        letter-spacing: 1px;
+        font-weight: 400;
+    }
+
+    .why-choose-mid {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .why-choose-mid>img {
+        height: 250px;
+    }
+
+    .linkdin {
+        text-align: center;
+    }
+
+    .main {
+        padding: 20px 25px;
+        font-size: 21px;
+        font-weight: 600;
+        background: linear-gradient(50deg, #2600fc, #ff00ea);
+        color: #fff;
+        border: 0;
+        border-radius: 30px;
+        cursor: pointer;
+        text-align: center;
+        text-transform: capitalize;
+    }
+
+
+    /* animation on website */
+
+    .section {
+        transform: translateY(50px);
+        transition: all 0.5s;
+        opacity: 0;
+    }
+
+    .active {
+        transform: translateY(0px);
+        opacity: 1;
+        transition: all 0.5s;
+    }
+
+    .links-icon {
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 35px;
+        transition: all 0.5s;
+        padding: 80px 0 20px 0;
+        font-size: 39px;
+    }
+
+    .links-icon>a {
+        color: white;
+        /* width: 139px; */
+    }
+
+    .links-icon>a:hover {
+        background: linear-gradient(25deg, #2600fc, #ff00ea);
+        -webkit-background-clip: text;
+        color: transparent;
+        transition: all 0.5s;
+        /* font-size: 38.5px; */
+    }
+
+    .market-list {
+        overflow-x: auto;
+        height: auto;
+        width: auto;
+        padding-block-end: 20px;
+        overflow-y: hidden;
+    }
+
+    @media screen and (max-width: 950px) {
+        .why-choose {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        .text>h1 {
+            font-size: 4.5rem;
+        }
+    }
+
+    @media screen and (max-width: 800px) {
+        .menu {
+            flex-direction: column;
+            position: absolute;
+            right: 0;
+            top: 0;
+            gap: 20px;
+            align-items: start;
+            background: black;
+            width: 60%;
+            height: 900%;
+            justify-content: center;
+            padding-left: 21px;
+            transform: translatex(100%);
+            transition: all 0.5s;
+        }
+
+        .header-button {
+            display: block !important;
+        }
+
+        .text>h1 {
+            font-size: 3rem;
+        }
+
+        .crypto-rate {
+            margin-top: 10%;
+            flex-wrap: wrap;
+        }
+
+        .rate-box>img {
+            width: 70px;
+        }
+    }
+
+
+    @media screen and (max-width: 500px) {
+        .text>h1 {
+            font-size: 2rem;
+        }
+
+        .crypto-rate {
+            padding: 10% 0 0 0;
+            flex-wrap: wrap;
+        }
+
+
+        .rate-box>img {
+            width: 50px;
+        }
+
+        .rate-box>p {
+            font-size: 20px;
+        }
+
+        .market>h1 {
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        .why {
+            font-size: 50px !important;
+        }
+
+        .main {
+            font-size: 15px;
+            padding: 16px 21px;
+        }
+
+        nav>ul>a {
+            font-size: 22px;
+        }
+
+        .wallet {
+            font-size: 15px;
+            padding: 3px 15px 5px 15px;
+            margin-right: 45px;
+        }
+
+        .market .market-list .trade-detail>p {
+            font-size: 19px;
+        }
+
+        .market .market-list .trade-detail>p>img {
+            width: 40px;
+        }
+
+        .left-details-one>img {
+            height: 31px;
+        }
+
+        .left-details-one {
+            gap: 15px;
+        }
+
+        .one-detail>b {
+            font-size: 21px;
+        }
+
+        .one-detail>p {
+            font-size: 17px;
+        }
+    }
+
+
+    .header-button {
+        position: absolute;
+        background: none;
+        width: 27px;
+        height: 18px;
+        border: 0;
+        outline: 0;
+        cursor: pointer;
+        z-index: 99;
+        display: none;
+        right: 4%;
+    }
+
+    .menu-visible {
+        transform: translatex(0%);
+        transition: all 0.5s;
+    }
+
+    .line {
+        height: 2px;
+        width: 100%;
+        background: white;
+        /* position: relative; */
+    }
+
+
+    .header-button::after {
+        content: '';
+        position: absolute;
+        height: 2px;
+        width: 100%;
+        background: white;
+        left: 0;
+        bottom: 0;
+        transition: all 0.5s;
+        display: block
+            /* transform: rotate(45deg) translate(-6px, -5px); */
+    }
+
+    .header-button::before {
+        content: '';
+        position: absolute;
+        display: block;
+        height: 2px;
+        width: 100%;
+        background: white;
+        left: 0;
+        top: 0;
+        transition: all 0.5s;
+        /* transform: rotate(-45deg) translate(-6px, 5px); */
+    }
+
+    .active-button {
+        position: fixed !important;
+        right: 4% !important;
+    }
+
+    .active-button .line {
+        opacity: 0;
+    }
+
+    .active-button::after {
+        transform: rotate(45deg) translate(-6px, -5px);
+    }
+
+    .active-button::before {
+        transform: rotate(-45deg) translate(-6px, 5px);
+    }
+
+    nav>ul>li>a {
+        text-decoration: none;
+        color: white;
+    }
+
+    .reds {
+        color: red !important;
+    }
+
+    .greens {
+        color: green !important;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <nav>
+            <ul>
+                <img src="./logo.png" alt="png" style="width: 35px; cursor: pointer;">
+                <a href="#">
+                    Coindom.
+                </a>
+            </ul>
+            <ul class="menu">
+                <li><a href="#" onclick="mobileClose()">Home</a></li>
+                <li><a href="#market" onclick="mobileClose()">Update</a></li>
+                <li><a href="#details" onclick="mobileClose()">Market Details</a></li>
+                <li><a href="#contact" onclick="mobileClose()">Contect Us</a></li>
+            </ul>
+
+            <ul>
+                <button type="submit" class="wallet">wallet</button>
+            </ul>
+
+            <!-- <div class="mobile-navbar-btn"> -->
+            <button class="header-button">
+                <div class="line"></div>
+            </button>
+        </nav>
+
+        <div class="text section">
+            <!-- <h1>Buy & <br> sell <span>crypto</span></h1> -->
+            <h1>TRACK AND TRADE <br>
+                <span>CRYPTO CURRENCIES</span>
+            </h1>
+            <!-- <p>world's biggest crypto-currency exchange available <br> on only web</p> -->
+        </div>
+
+        <div class="crypto-rate">
+            <div class="rate-box">
+                <img src="./bitcoin.png" alt="bitcoin">
+                <p>bitcoin </p>
+                <p><span class="bitcoin">3499</span></p>
+            </div>
+
+            <div class="rate-box">
+                <img src="./dogecoin.png" alt="dogecoin">
+                <p>dogecoin </p>
+                <p><span class="dogecoin">3499</span></p>
+            </div>
+
+            <div class="rate-box">
+                <img src="./ethereum.png" alt="ethereum">
+                <p>ethereum </p>
+                <p><span class="ethereum">3499</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="market" id="market">
+        <h1 class="section">Market Update</h1>
+        <!-- <i style="color: #fff; font-size: 13px;">only price is real</i> -->
+
+        <div class="main-container">
+            <div class="market-list section">
+
+                <div class="section trade-detail" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                    <p style="margin-right: 20%;">coin</p>
+                    <p>real price</p>
+                    <p>Volume/Market Cap</p>
+                    <p>Market Cap</p>
+                    <!-- <button class="wallet" style="opacity: 0;">trade</button> -->
+                    <p>more details</p>
+                </div>
+
+                <div class="section trade-detail details">
+                    <p style="margin-right: 10%; display: flex;align-items: center;gap: 15px;"> <img src="./bitcoin.png"
+                            alt="bitcoin"> Bitcoin</p>
+                    <p><span class="bitcoin">3499</span></p>
+                    <p class="reds bitcoinVol">-2.60%</p>
+                    <p class="bitcoin24">$83,363,913,000</p>
+                    <a class="wallet" href="https://www.binance.com/en-IN/price/bitcoin">details</a>
+                </div>
+
+                <div class="section trade-detail details">
+                    <p style="margin-right: 10%; display: flex;align-items: center;gap: 15px;"> <img
+                            src="./dogecoin.png" alt="bitcoin"> dogecoin</p>
+                    <p><span class="dogecoin">3499</span></p>
+                    <p class="reds dogecoinVol">-2.6%</p>
+                    <p class="dogecoin24">$83,363,913,000</p>
+                    <a class="wallet" href="https://www.binance.com/en-IN/price/dogecoin">details</a>
+                </div>
+
+                <div class="section trade-detail details">
+                    <p style="margin-right: 10%; display: flex;align-items: center;gap: 15px;"> <img
+                            src="./cardano.webp" alt="bitcoin"> cardano</p>
+                    <p><span class="cardano">3499</span></p>
+                    <p class="greens cardanoVol">2.90%</p>
+                    <p class="cardano24">$83,363,913,000</p>
+                    <a class="wallet" href="https://www.binance.com/en-IN/price/cardano">details</a>
+                </div>
+
+                <div class="section trade-detail details">
+                    <p style="margin-right: 10%; display: flex;align-items: center;gap: 15px;"> <img
+                            src="./litecoin.webp" alt="bitcoin"> litecoin</p>
+                    <p><span class="litecoin">3499</span></p>
+                    <p class="reds litecoinVol">-2.82%</p>
+                    <p class="litecoin24">$83,363,913,000</p>
+                    <a class="wallet" href="https://www.binance.com/en-IN/price/litecoin">details</a>
+                </div>
+
+                <div class="section trade-detail details">
+                    <p style="margin-right: 10%; display: flex;align-items: center;gap: 15px;"> <img src="./Tether.webp"
+                            alt="bitcoin"> tether</p>
+                    <p><span class="tether">3499</span></p>
+                    <p class="reds tetherVol">-2.94%</p>
+                    <p class="tether24">$83,363,913,000</p>
+                    <a class="wallet" href="https://www.binance.com/en-IN/price/tether">details</a>
+                </div>
+
+                <div class="section trade-detail details">
+                    <p style="margin-right: 8%; display: flex;align-items: center;gap: 15px;"> <img src="./ethereum.png"
+                            alt="bitcoin"> ethereum</p>
+                    <p><span class="ethereum">3499</span></p>
+                    <p class="greens ethereumVol">2.68%</p>
+                    <p class="ethereum24">$83,363,913,000</p>
+                    <a class="wallet" href="https://www.binance.com/en-IN/price/ethereum">details</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- why choose -->
+
+
+        <h1 class="why section" id="details">why <span>choose us</span></h1>
+        <div class="why-choose section">
+
+            <div class="why-choose-left">
+                <div class="left-details-one section">
+                    <img src="./wallet.png" alt="wallet">
+                    <div class="one-detail">
+                        <b>CONNECT YOUR WALLET</b>
+                        <p>Use Trust Wallet, Metamask or to connect to the app.</p>
+                    </div>
+                </div>
+
+                <div class="left-details-one section">
+                    <img src="./pen.png" alt="pen">
+                    <div class="one-detail">
+                        <b>SELECT YOUR QUANTITY</b>
+                        <p>Upload your crypto and set a title, description and price.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="why-choose-mid section">
+                <img src="./choose-main.39852b7511b28d44406f.png" alt="hero">
+            </div>
+            <div class="why-choose-right why-choose-left">
+                <div class="left-details-one section">
+                    <img src="./collab.png" alt="sell">
+                    <div class="one-detail">
+                        <b>TAKE A MARKET TO SELL</b>
+                        <p>Discover, collect the right crypto collections to buy or sell.</p>
+                    </div>
+                </div>
+
+                <div class="left-details-one section">
+                    <img src="./playlist.png" alt="collection">
+                    <div class="one-detail">
+                        <b>DRIVE YOUR COLLECTION</b>
+                        <p>We make it easy to Discover, Invest and manage</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="why section" style=" font-weight: 700; text-transform: uppercase;" id="contact">join me
+            on <br>
+            <span>linkdin</span>
+        </h1>
+
+        <div class="linkdin section">
+            <a href="https://www.linkedin.com/in/vaibhav-singh-2a5159250/"><button class="main">join our
+                    linkdin</button></a>
+        </div>
+
+
+        <div class="links-icon">
+            <a href="https://m.facebook.com/profile.php?id=100027660518933"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.linkedin.com/in/vaibhav-singh-2a5159250/"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://api.whatsapp.com/send?phone=7991652863&text=Feel%20Free%20to%20Contact%20Us"><i
+                    class="fa-brands fa-whatsapp"></i></a>
+        </div>
+        <p style="text-align: center; color: white; font-size: 22px; font-weight: 800px;">Copyright, Policy</p>
+
+    </div>
+
+
+
+
+    <script>
+        let sections = document.querySelectorAll('.section');
+        // console.log(sections)
+        const scrollReveal = function () {
+            for (let i = 0; i < sections.length; i++) {
+                // console.log(sections.length)
+                if (sections[i].getBoundingClientRect().top < window.innerHeight / 1.1) {
+                    sections[i].classList.add('active');
+
+                } else {
+                    sections[i].classList.remove('active');
+                }
+            }
+        }
+
+        scrollReveal();
+        addEventListener('scroll', scrollReveal);
+
+
+        // mobile
+
+        let headerbutton = document.getElementsByClassName('header-button')[0];
+        let menu = document.getElementsByClassName('menu')[0];
+        // console.log(headerbutton)
+        headerbutton.addEventListener('click', function () {
+            headerbutton.classList.toggle('active-button');
+            menu.classList.toggle('menu-visible');
+
+            mobileClose = () => {
+                headerbutton.classList.remove('active-button');
+                menu.classList.remove('menu-visible');
+            }
+        })
+
+
+
+
+
+        let bit = document.getElementsByClassName('bitcoin');
+        let bit24 = document.getElementsByClassName('bitcoin24');
+        let bitVol = document.getElementsByClassName('bitcoinVol');
+        // console.log(bit)
+        let doge = document.getElementsByClassName('dogecoin');
+        let doge24 = document.getElementsByClassName('dogecoin24');
+        let dogeVol = document.getElementsByClassName('dogecoinVol');
+
+        let eth = document.getElementsByClassName('ethereum');
+        let eth24 = document.getElementsByClassName('ethereum24');
+        let ethVol = document.getElementsByClassName('ethereumVol');
+
+        let car = document.getElementsByClassName('cardano');
+        let car24 = document.getElementsByClassName('cardano24');
+        let carVol = document.getElementsByClassName('cardanoVol');
+
+        let tether = document.getElementsByClassName('tether');
+        let tether24 = document.getElementsByClassName('tether24');
+        let tetherVol = document.getElementsByClassName('tetherVol');
+
+        let litecoin = document.getElementsByClassName('litecoin');
+        let litecoin24 = document.getElementsByClassName('litecoin24');
+        let litecoinVol = document.getElementsByClassName('litecoinVol');
+
+        // let percent = document.getElementsByClassName('Bit');
+        // let percent2 = document.getElementsByClassName('eth');
+        // let percent3 = document.getElementsByClassName('doge');
+
+
+
+        const url = 'https://crypto-update-live.p.rapidapi.com/top-currency/top_50_details';
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': '3b33dec5e3msh6a58e505dac1f5fp1886c5jsn5f61d726674c',
+                'X-RapidAPI-Host': 'crypto-update-live.p.rapidapi.com'
+            }
+        };
+
+        const myfun = async () => {
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                // console.log(result?.['Top 50 Cryptocurrency Details']);
+
+                let data = result?.['Top 50 Cryptocurrency Details'];
+
+                bit[0].innerHTML = data[0].Price;
+                bit[1].innerHTML = data[0].Price;
+                bit24[0].innerHTML = data[0]?.['Market Cap'];
+                bitVol[0].innerHTML = data[0]?.['Volume/Market Cap'];
+                // console.log(data[0])
+                // percent[0].innerHTML = data[0]?.['Volume/Market Cap'];
+
+                eth[0].innerHTML = data[1].Price;
+                eth[1].innerHTML = data[1].Price;
+                eth24[0].innerHTML = data[1]?.['Market Cap'];
+                ethVol[0].innerHTML = data[1]?.['Volume/Market Cap'];
+                // console.log(data[1])
+                // percent2[0].innerHTML = data[0]?.['Volume/Market Cap'];
+
+                doge[0].innerHTML = data[9].Price;
+                doge[1].innerHTML = data[9].Price;
+                doge24[0].innerHTML = data[9]?.['Market Cap'];
+                dogeVol[0].innerHTML = data[9]?.['Volume/Market Cap'];
+                // console.log(data[9])
+                // percent3[0].innerHTML = data[0]?.['Volume/Market Cap'];
+
+                car[0].innerHTML = data[7].Price;
+                car24[0].innerHTML = data[7]?.['Market Cap'];
+                carVol[0].innerHTML = data[7]?.['Volume/Market Cap'];
+                // console.log(data[7])
+
+
+                tether[0].innerHTML = data[2].Price;
+                tether24[0].innerHTML = data[2]?.['Market Cap'];
+                tetherVol[0].innerHTML = data[2]?.['Volume/Market Cap'];
+                // console.log(data[2])
+
+
+                litecoin[0].innerHTML = data[20].Price;
+                litecoin24[0].innerHTML = data[20]?.['Market Cap'];
+                litecoinVol[0].innerHTML = data[20]?.['Volume/Market Cap'];
+                // console.log(data[20])
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        myfun()
+
+        // console.log(myfun()?.result?.['Top 50 Cryptocurrency Details'])
+        // console.log(data[2])
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
