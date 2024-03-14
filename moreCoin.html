@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="ICON" type="image/png" href="./bitcoin.e146d46fb598ae0d8f43.png" />
+</head>
+<style>
+    .search-button {
+        text-align: center;
+
+    }
+
+    .search-button>input {
+        width: 30%;
+        padding: 10px 5px;
+        border-radius: 7px;
+        border: 0;
+    }
+
+    .search-button>a {
+        padding: 10px 25px;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(-50deg, #2600fc, #ff00ea);
+        border: 0;
+        border-radius: 7px;
+        /* margin-left: 15px; */
+        display: inline-block;
+        cursor: pointer;
+        float: left;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .search-button>a:hover {
+        transform: scale(1.1);
+        transition: all 0.3s;
+    }
+
+    @media screen and (max-width: 500px) {
+        .search-button {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-button>a {
+            width: max-content;
+            margin-bottom: 15px;
+        }
+
+        .search-button>input {
+            width: 100%;
+        }
+    }
+</style>
+
+<body>
+    <div class="market" id="market">
+        <div class="search-button">
+            <a href="/index.html">Back to web</a>
+            <input type="text" name="text" placeholder="Search Coin" onkeyup="check()" id="search">
+        </div>
+        <h1 class="" style="margin-top: 2%">Market Update</h1>
+        <div class="main-container">
+            <div class="market-list ">
+                <div class=" trade-detail" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                    <p style="margin-right: 20%;">coin</p>
+                    <p>real price</p>
+                    <p>Volume/Market Cap</p>
+                    <p>Market Cap</p>
+                    <p>Total Supply</p>
+                    <p>more details</p>
+                </div>
+
+                <div class="coinImg" style="color: white; display: grid;"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+
+        const url = 'https://crypto-update-live.p.rapidapi.com/top-currency/top_50_details';
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': '3b33dec5e3msh6a58e505dac1f5fp1886c5jsn5f61d726674c',
+                'X-RapidAPI-Host': 'crypto-update-live.p.rapidapi.com'
+            }
+        };
+
+        const myfuns = async () => {
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                // console.log(result?.['Top 50 Cryptocurrency Details']);
+
+                var data = result?.['Top 50 Cryptocurrency Details'];
+                console.log(data)
+                // coinImg.innerHTML = 'me'
+                let coinImg = document.querySelector('.coinImg')
+                let tableData = ''
+                data.map((item, index) => {
+                    // coinImg.innerHTML = item.Coin
+                    tableData += `<div class="trade-detail details nameOfCoin">
+                    <p style="margin-right: 10%; display: flex;align-items: center;gap: 15px;" >
+                        <img src=${item.Image} class="" alt="bitcoin" /> ${item.Coin}
+                    </p>
+                    <p><span class="bitcoin coinImg">${item.Price}</span></p>
+                    <p class="reds bitcoinVol">${item?.['Volume/Market Cap']}</p>
+                    <p class="bitcoin24">${item?.['Market Cap']}</p>
+                    <p class="bitcoin24">${item?.['Total Supply']}</p>
+                    <a class="wallet" href=${item.Link}>details</a>
+                </div>`
+
+
+                })
+                coinImg.innerHTML = tableData;
+
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        myfuns()
+
+        // console.log(myfuns)
+
+        const check = () => {
+
+            let filter = document.getElementById('search').value.toUpperCase()
+            let nameOfCoin = document.getElementsByClassName('nameOfCoin')
+
+            // console.log(nameOfCoin.value)
+
+            for (var i = 0; i < nameOfCoin.length; i++) {
+                let p = nameOfCoin[i].getElementsByTagName('p')[0]
+                if (p) {
+                    let textValue = p.textContent || p.innerHTML;
+                    if (textValue.toUpperCase().indexOf(filter) > -1) {
+                        nameOfCoin[i].style.display = '';
+                    } else {
+                        nameOfCoin[i].style.display = 'none';
+                    }
+                } else {
+                    alert('no')
+                }
+            }
+            // if (e === item.Coin) {
+            //     alert('yes i found')
+            // }
+        }
+
+
+
+    </script>
+</body>
+
+</html>
