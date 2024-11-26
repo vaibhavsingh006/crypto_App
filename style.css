@@ -179,7 +179,7 @@ li:hover {
     /* background: linear-gradient(25deg, #2600fc, #9139f7); */
     background: linear-gradient(25deg, #2600fc, #ff00ea);
     padding: 20px 15px;
-    width: 1075px;
+/*     width: 1075px; */
 }
 
 ::-webkit-scrollbar {
